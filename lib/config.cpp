@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include "config.h"
 #include "log.h"
 #include "../include/json.hpp"
@@ -29,6 +30,10 @@ void config::from_json(const nlohmann::json &j, config::pin_mapping &p)
 int config::init(std::string config_path)
 {   
     LOG_INFO("Loading configuration file from path: %s", config_path.c_str());
+    if (!std::filesystem::exists(config_path)) {
+        LOG_ERROR("No config file found at %s", config_path.c_str());
+        return 1;
+    }
     std::ifstream file(config_path);
     json config;
 

@@ -6,13 +6,21 @@
 #include "framebuffer.h"
 #include <chrono>
 
-#define CONFIG_FILE "./config.json"
+#define CONFIG_FILE_LOCAL "./config.json"
+#define CONFIG_FILE_GLOBAL "/etc/matrix/config.json"
 
 int main()
 {   
     LOG_INFO("Starting HUB75 driver");
 
-    config::init(CONFIG_FILE);
+    if (config::init(CONFIG_FILE_GLOBAL) != 0) {
+        if (config::init(CONFIG_FILE_LOCAL) != 0) {
+            LOG_ERROR("No config file at either %s or %s", CONFIG_FILE_GLOBAL, CONFIG_FILE_LOCAL);
+            exit(1);
+        } else {
+            LOG_WARN("No global config file at %s, using local config file at %s instead", CONFIG_FILE_GLOBAL, CONFIG_FILE_LOCAL);
+        }
+    }
     LOG_INFO("Configuration loaded successfully");
 
     GPIO::init();
