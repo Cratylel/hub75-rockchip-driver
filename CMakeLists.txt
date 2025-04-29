@@ -1,27 +1,45 @@
-cmake_minimum_required(VERSION 3.10)
-project(GPIOTests)
+cmake_minimum_required(VERSION 3.14)
+project(MatrixMainExecutable LANGUAGES CXX)
 
-# Specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+# Set C++ standard and flags
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3 -g -rdynamic")
 
-# Add GoogleTest
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
+# Optional preprocessor defines
+if(TEST_ENV)
+    add_compile_definitions(TEST_ENV)
+endif()
+if(LOG_LEVEL_DEBUG)
+    add_compile_definitions(LOG_LEVEL_DEBUG)
+endif()
+if(TEST_SERVER)
+    add_compile_definitions(TEST_SERVER)
+endif()
+
+# Include paths
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/lib)
+
+# Get all .cpp files
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/lib/*.cpp"
 )
-FetchContent_MakeAvailable(googletest)
 
-enable_testing()
+# Detect architecture
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" ARCH_STR)
 
-# Add the GPIO source files
-add_library(GPIOLib lib/gpio.cpp)
-target_include_directories(GPIOLib PUBLIC lib)
+# Normalize common values
+if(ARCH_STR MATCHES "x86_64|amd64")
+    set(ARCH_SUFFIX "x86")
+elseif(ARCH_STR MATCHES "arm*")
+    set(ARCH_SUFFIX "arm")
+elseif(ARCH_STR MATCHES "aarch64")
+    set(ARCH_SUFFIX "arm64")
+else()
+    set(ARCH_SUFFIX "${ARCH_STR}")
+endif()
 
-# Add test executable
-add_executable(test_gpio test/test_gpio.cpp)
-target_link_libraries(test_gpio GPIOLib gtest gtest_main)
-
-# Enable CTest and add a test
-add_test(NAME GPIOTests COMMAND test_gpio)
+# Final executable
+set(EXECUTABLE_NAME "main_${ARCH_SUFFIX}")
+add_executable(${EXECUTABLE_NAME} ${SOURCES})
