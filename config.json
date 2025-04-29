@@ -1,0 +1,41 @@
+{
+    "width": 64,
+    "height": 32,
+    "refresh_rate": 30,
+    "buffer_path": "/pixel_mapper_buffer",
+    "selected_mapping": "default",
+    "mappings": {
+        "default": {
+            "OE": 33,
+            "STB": 52,
+            "CLK": 58,
+            "A": 50,
+            "B": 51,
+            "C": 40,
+            "D": 41,
+            "E": 59,
+            "R1": 32,
+            "G1": 57,
+            "B1": 56,
+            "R2": 55,
+            "G2": 54,
+            "B2": 53
+        },
+        "alt1": {
+            "OE": 19,
+            "STB": 20,
+            "CLK": 21,
+            "A": 22,
+            "B": 23,
+            "C": 24,
+            "D": 25,
+            "E": 26,
+            "R1": 27,
+            "G1": 28,
+            "B1": 29,
+            "R2": 30,
+            "G2": 31,
+            "B2": 32
+        }
+    }
+}
