@@ -5,7 +5,7 @@
       "name": "Debug Main",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/main_x86_64",
+      "program": "${workspaceFolder}/main_x86",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
